@@ -25,14 +25,13 @@ public class TflController {
     String apiToken;
 
     public TflController(TflClient tflClient) {
-
         this.tflClient = tflClient;
     }
 
     @GetMapping(value = "/Road/{ids}")
-    ResponseEntity <List<RoadStatus>> getRoadStatus(@PathVariable(name = "ids")String id) throws Exception{
+    ResponseEntity <List<RoadStatus>> getRoadStatus(@PathVariable(name = "ids")String ids) throws Exception{
         try {
-            return tflClient.getRoadStatus(id);
+            return tflClient.getRoadStatus(ids);
         } catch (FeignException e) {
             ObjectMapper objectMapper = new ObjectMapper();
             ErrorStatus r = objectMapper.readValue(e.responseBody().get().array(), ErrorStatus.class);
