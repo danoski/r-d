@@ -18,10 +18,10 @@ import java.util.List;
 public class TflController {
 
     private TflClient tflClient;
-    @Value("key.api")
+    @Value("${key.api}")
     String apiKey;
 
-    @Value("key.token")
+    @Value("${key.token}")
     String apiToken;
 
     public TflController(TflClient tflClient) {
@@ -31,16 +31,14 @@ public class TflController {
 
     @GetMapping(value = "/Road/{ids}")
     ResponseEntity <List<RoadStatus>> getRoadStatus(@PathVariable(name = "ids")String id) throws Exception{
-        ResponseEntity re;
         try {
-            re = tflClient.getRoadStatus(id);
-            return re;
+            return tflClient.getRoadStatus(id);
         } catch (FeignException e) {
             ObjectMapper objectMapper = new ObjectMapper();
             ErrorStatus r = objectMapper.readValue(e.responseBody().get().array(), ErrorStatus.class);
             return new ResponseEntity(r,HttpStatus.valueOf(e.status()));
         }catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
